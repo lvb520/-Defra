@@ -25,6 +25,9 @@ write_csv(yearly_avg,
 ### plotting
 
 
-timePlot(yearly_avg,
-         pollutant = "o3",
-         type = "site")
+yearly_avg %>%
+  left_join(meta) %>%
+  drop_na(o3) %>%
+  ggplot(aes(x = date, y = o3, colour = site)) +
+  facet_wrap(~site_type) +
+  geom_line(show.legend = FALSE)
