@@ -47,13 +47,18 @@ number_of_obs = yearly_avg %>%
 ### plotting
 
 ## scatter plot
-yearly_avg %>%
+(yearly_scatter = yearly_avg %>%
   left_join(meta) %>%
   filter(site_type %in% c("Rural Background", "Urban Background", "Urban Traffic")) %>%
   drop_na(o3) %>%
   ggplot(aes(x = date, y = o3, colour = site)) +
   facet_wrap(~site_type) +
   geom_point(show.legend = FALSE) +
-  theme_bw()
+  theme_bw() +
+  labs(y = expression("O"[3]*" (ppb)"),
+       title = "yearly average ozone by site"))
 
-## boxplot 
+ggsave(yearly_scatter,
+       filename = "plots/yearly_avg_scatter.png",
+       device = "png")
+
