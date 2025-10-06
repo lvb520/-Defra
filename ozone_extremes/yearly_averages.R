@@ -10,7 +10,7 @@ one_site = importAURN(site = "my1", year = 2022,
                       meta = TRUE)
 
 
-## calculate yearly average ozone 
+### calculate yearly average ozone 
 
 yearly_avg = timeAverage(data_all, 
                          avg.time = "year",
@@ -20,3 +20,6 @@ yearly_avg = timeAverage(data_all,
 
 write_csv(yearly_avg, 
           file = "data/yearly_average_o3_by_site.csv")
+
+
+### plotting
