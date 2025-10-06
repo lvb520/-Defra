@@ -33,13 +33,25 @@ count_non_na_groups = number_of_obs %>%
 
 print(count_non_na_groups)
 
+### number for each site type
+
+number_of_obs = yearly_avg %>%
+  left_join(meta) %>%
+  group_by(site_type, site) %>%
+  summarise(non_na_o3 = sum(!is.na(o3)), .groups = "drop") %>%  # count non-NA o3 per site
+  filter(non_na_o3 > 0) %>%                                    # keep only sites with at least one non-NA o3
+  group_by(site_type) %>%
+  summarise(num_sites = n_distinct(site))
+
 
 ### plotting
 
 
 yearly_avg %>%
   left_join(meta) %>%
+  filter(site_type == "Urban Traffic") %>%
   drop_na(o3) %>%
   ggplot(aes(x = date, y = o3, colour = site)) +
   facet_wrap(~site_type) +
-  geom_line(show.legend = FALSE)
+  geom_point() +
+  theme_bw()
