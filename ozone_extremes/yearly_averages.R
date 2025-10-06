@@ -12,3 +12,6 @@ yearly_avg = timeAverage(one_site,
                          data.thresh = 85,
                          type = "site") %>%
   select(site, date, o3)
+
+write_csv(yearly_avg, 
+          file = "data/yearly_average_o3_by_site.csv")
