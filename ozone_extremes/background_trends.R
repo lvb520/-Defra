@@ -8,8 +8,7 @@ filtered_data = data %>%
   filter(site_type %in% c("Urban Background", "Urban Traffic", "Rural Background"))
 
 TheilSen(filtered_data, pollutant = "o3",
-         avg.time = "year",
+         avg.time = "month",
          date.breaks = 6,
          date.format = "%Y",
-         layout = c(1, 3),
-         type = "site_type")
+         type = c("site_type", "season"))
