@@ -46,12 +46,14 @@ number_of_obs = yearly_avg %>%
 
 ### plotting
 
-
+## scatter plot
 yearly_avg %>%
   left_join(meta) %>%
-  filter(site_type == "Urban Traffic") %>%
+  filter(site_type %in% c("Rural Background", "Urban Background", "Urban Traffic")) %>%
   drop_na(o3) %>%
   ggplot(aes(x = date, y = o3, colour = site)) +
   facet_wrap(~site_type) +
-  geom_point() +
+  geom_point(show.legend = FALSE) +
   theme_bw()
+
+## boxplot 
