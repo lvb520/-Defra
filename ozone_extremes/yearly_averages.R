@@ -7,6 +7,9 @@ site_list = meta$code
 
 data_all <- importAURN(site = site_list, year = 1994:2024, meta = TRUE)  
 
+saveRDS(data_all, 
+        file = "data/1994_2024_all_sites.rds")
+
 ### calculate yearly average ozone 
 
 yearly_avg = timeAverage(data_all, 
@@ -20,3 +23,8 @@ write_csv(yearly_avg,
 
 
 ### plotting
+
+
+timePlot(yearly_avg,
+         pollutant = "o3",
+         type = "site")
