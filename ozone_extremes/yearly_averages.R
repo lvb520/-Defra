@@ -21,6 +21,18 @@ yearly_avg = timeAverage(data_all,
 write_csv(yearly_avg, 
           file = "data/yearly_average_o3_by_site.csv")
 
+### checking number of sites with appropriate coverage
+
+number_of_obs = yearly_avg %>%
+  group_by(site) %>%
+  summarise(non_na_o3 = sum(!is.na(o3)))
+
+count_non_na_groups = number_of_obs %>%
+  filter(non_na_o3 > 0) %>%
+  tally()  
+
+print(count_non_na_groups)
+
 
 ### plotting
 
