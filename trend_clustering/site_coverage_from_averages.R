@@ -35,10 +35,10 @@ results %>%
 
 
 
-### chosen 6
+### chosen 5
 
 sites_for_analysis = site_numbers %>%
-    filter(if_all(all_of(count_cols), ~ . > 5)) 
+    filter(if_all(all_of(count_cols), ~ . > 4)) 
 
 site_list = sites_for_analysis %>%
   select(site)
