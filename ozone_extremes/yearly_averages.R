@@ -3,7 +3,7 @@ library(tidyverse)
 
 meta = importMeta(source = "aurn")
 
-data_all = read_rds("data/1994_2024_all_sites.rds")
+data_all = read_rds("../global/data/1994_2024_all_sites.rds")
 
 ### calculate yearly average ozone 
 
