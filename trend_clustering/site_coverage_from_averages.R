@@ -30,4 +30,18 @@ results %>%
   labs(x = "years with good coverage",
        y = "number of sites to be analysed") +
   scale_x_continuous(n.breaks = 11) +
+  scale_y_continuous(n.breaks = 7) +
   theme_bw()
+
+
+
+### chosen 6
+
+sites_for_analysis = site_numbers %>%
+    filter(if_all(all_of(count_cols), ~ . > 5)) 
+
+site_list = sites_for_analysis %>%
+  select(site)
+
+write_csv(site_list, 
+          file = "data/sites_for_clustering.csv")
