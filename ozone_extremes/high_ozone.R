@@ -41,3 +41,10 @@ top_10_percent = cut_urban_traffic %>%
   bind_rows(cut_rural_background) %>%
   rename(o3_category = o3) %>%
   left_join(o3_concs)
+
+TheilSen(top_10_percent, pollutant = "o3",
+         avg.time = "month",
+         date.breaks = 6,
+         date.format = "%Y",
+         layout = c(1,3),
+         type = c("site_type"))
