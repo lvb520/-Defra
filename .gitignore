@@ -3,3 +3,4 @@
 .RData
 .Ruserdata
 global/data/1994_2024_all_sites.rds
+trend_clustering/data/yearly_averages_10_years.rds
