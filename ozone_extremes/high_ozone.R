@@ -1,8 +1,11 @@
 library(openair)
 library(tidyverse)
+library(lubridate)
 
 
 data = read_rds("../global/data/1994_2024_all_sites.rds")
+
+yearly_means = read_csv("data/yearly_average_o3_by_site.csv")
 
 o3_concs = data %>%
   select(site, date, o3)
@@ -43,4 +46,28 @@ TheilSen(top_1_percent, pollutant = "o3",
          date.breaks = 6,
          date.format = "%Y",
          layout = c(1,3),
+         type = c("site_type"))
+
+
+
+### as ratios
+
+yearly_means = yearly_means %>%
+  mutate(year = lubridate::year(date)) %>%
+  select(site, year, o3) %>%
+  rename(annual_mean_o3 = o3)
+
+ratios = top_1_percent %>%
+  mutate(year = lubridate::year(date)) %>%
+  left_join(yearly_means) %>%
+  mutate(ratio = o3/annual_mean_o3,
+         percent = 100*o3/annual_mean_o3,
+         percent_difference_from_mean = 100*(o3-annual_mean_o3)/annual_mean_o3)
+
+TheilSen(ratios, pollutant = "percent_difference_from_mean",
+         avg.time = "month",
+         date.breaks = 6,
+         date.format = "%Y",
+         layout = c(1,3),
+         y.relation = "free",
          type = c("site_type"))
