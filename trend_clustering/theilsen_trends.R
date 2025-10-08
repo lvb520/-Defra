@@ -16,7 +16,12 @@ nox_trends = TheilSen(cluster_data,
          avg.time = "year")
 
 nox_results = nox_trends$data[[2]] %>% # slope is trend per year, lower and upper are 95% CI of the slope
-  drop_na(slope)
+  drop_na(slope) %>%
+  select(site, p.stars, slope, lower, upper) %>%
+  rename(nox_p.stars = p.stars, 
+         nox_slope= slope, 
+         nox_lower = lower,
+         nox_upper = upper)
 
 
 o3_trends = TheilSen(cluster_data,
@@ -25,7 +30,12 @@ o3_trends = TheilSen(cluster_data,
                       avg.time = "year")
 
 o3_results = o3_trends$data[[2]] %>% # slope is trend per year, lower and upper are 95% CI of the slope
-  drop_na(slope)
+  drop_na(slope) %>% 
+  select(site, p.stars, slope, lower, upper) %>%
+  rename(o3_p.stars = p.stars, 
+         o3_slope= slope, 
+         o3_lower = lower,
+         o3_upper = upper)
 
 
 
@@ -35,4 +45,18 @@ pm2.5_trends = TheilSen(cluster_data,
                      avg.time = "year")
 
 pm2.5_results = pm2.5_trends$data[[2]] %>% # slope is trend per year, lower and upper are 95% CI of the slope
-  drop_na(slope)
+  drop_na(slope) %>% 
+  select(site, p.stars, slope, lower, upper) %>%
+  rename(pm2.5_p.stars = p.stars, 
+         pm2.5_slope= slope, 
+         pm2.5_lower = lower,
+         pm2.5_upper = upper)
+
+
+trends = nox_results %>%
+  left_join(o3_results) %>%
+  left_join(pm2.5_results)
+
+
+write_csv(trends, 
+          "data/annual_trends.csv")
