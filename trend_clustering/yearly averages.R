@@ -14,3 +14,19 @@ averages = timeAverage(a,
 
 write_rds(averages, 
           file = "data/yearly_averages_10_years.rds")
+
+
+
+ ############# monthly
+
+
+b = selectByDate(data, 
+                 year = 2014:2024)
+
+monthly_averages = timeAverage(b,
+                       avg.time = "month",
+                       data.thresh = 85,
+                       type = "site")
+
+write_rds(monthly_averages, 
+          file = "data/monthly_averages_10_years.rds")
