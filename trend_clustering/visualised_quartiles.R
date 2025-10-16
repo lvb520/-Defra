@@ -44,7 +44,6 @@ category_colors <- c(
   "4" = "red1"
 )
 
-
 cuts %>%
   pivot_longer(cols = c(nox_slope, o3_slope, pm2.5_slope),
                names_to = "poll",
