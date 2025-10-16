@@ -37,6 +37,12 @@ cuts = nox_cut %>%
   left_join(pm2.5_cut) %>%
   drop_na(pm2.5_slope) 
 
+totals = cuts %>%
+  mutate(nox_slope = as.numeric(nox_slope),
+         o3_slope = as.numeric(o3_slope),
+         pm2.5_slope = as.numeric(pm2.5_slope),
+         total = nox_slope + o3_slope + pm2.5_slope) 
+
 category_colors <- c(
   "1" = "blue1",
   "2" = "skyblue1",
@@ -47,9 +53,82 @@ category_colors <- c(
 cuts %>%
   pivot_longer(cols = c(nox_slope, o3_slope, pm2.5_slope),
                names_to = "poll",
-               values_to = "slope_category") %>%
-  mutate(total = no)
-  ggplot(aes(x = poll, y = site)) +
+               values_to = "slope_category",
+               names_pattern = "(.*)_slope") %>%
+  left_join(totals) %>%
+  ggplot(aes(x = poll, y = reorder(site, total))) +
   geom_point(aes(colour = slope_category), shape = 15, size = 5) +
   scale_colour_manual(values = category_colors) +
+    labs(colour = "strength of trend",
+         x = "pollutant",
+         y = "site",
+         subtitle = "Thiel-Sen Trend over 10 years") +
   theme_minimal()
+
+
+
+library(sf)         
+library(ggplot2)     
+library(rnaturalearth)       
+library(rnaturalearthdata)   
+
+sites = read_csv("data/sites_for_clustering.csv")
+
+start_concentration = read_rds("data/yearly_averages_10_years.rds") %>%
+  drop_na(pm2.5) %>%
+  select(site, date, pm2.5) %>%
+  group_by(site) %>%
+  filter(date == min(date))
+
+meta = importMeta(source = "aurn")
+
+
+sites_with_meta = sites %>%
+  left_join(meta) %>%
+  left_join(cuts) %>%
+  left_join(start_concentration)
+  
+
+uk_map <- ne_countries(scale = "medium", country = "United Kingdom", returnclass = "sf")
+
+sites_sf <- sites_with_meta %>%
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)  # WGS84
+
+(site_map = ggplot(data = uk_map) +
+    geom_sf(fill = "gray90", color = "white") +
+    geom_sf(data = sites_sf, aes(color = pm2.5_slope), size = 2) +
+    coord_sf(xlim = c(-8, 2), ylim = c(49.5, 59), expand = FALSE) +
+    scale_colour_manual(values = category_colors) +
+#    labs(
+#      title = "Sites for Clustering Analysis",
+#      color = "Site Type"
+#    ) +
+    theme_minimal())
+
+
+(site_map = ggplot(data = uk_map) +
+    geom_sf(fill = "gray90", color = "white") +
+    geom_sf(data = sites_sf, aes(color = pm2.5), size = 2) +
+    coord_sf(xlim = c(-8, 2), ylim = c(49.5, 59), expand = FALSE) +
+    scale_colour_distiller(palette = "RdBu") +
+    #scale_colour_manual(values = category_colors) +
+    #    labs(
+    #      title = "Sites for Clustering Analysis",
+    #      color = "Site Type"
+    #    ) +
+    theme_minimal())
+
+
+
+comp = trends %>%
+  left_join(start_concentration)
+
+
+comp %>%
+  ggplot(aes(x = pm2.5, 
+             y = pm2.5_slope)) +
+  geom_point() +
+  labs(x = "starting concentration of pm2.5",
+       y = "trend over 10 years") +
+  theme_minimal() +
+  stat_cor(label.x.npc = 0.6)
