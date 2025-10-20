@@ -18,11 +18,11 @@ nox_trends = TheilSen(cluster_data,
 
 nox_results = nox_trends$data[[2]] %>% # slope is trend per year, lower and upper are 95% CI of the slope
   drop_na(slope) %>%
-  select(site, p.stars, slope, lower, upper) %>%
+  select(site, p.stars, slope.percent, lower.percent, upper.percent) %>%
   rename(nox_p.stars = p.stars, 
-         nox_slope= slope, 
-         nox_lower = lower,
-         nox_upper = upper)
+         nox_slope= slope.percent, 
+         nox_lower = lower.percent,
+         nox_upper = upper.percent)
 
 
 o3_trends = TheilSen(cluster_data,
@@ -33,11 +33,11 @@ o3_trends = TheilSen(cluster_data,
 
 o3_results = o3_trends$data[[2]] %>% # slope is trend per year, lower and upper are 95% CI of the slope
   drop_na(slope) %>% 
-  select(site, p.stars, slope, lower, upper) %>%
+  select(site, p.stars, slope.percent, lower.percent, upper.percent) %>%
   rename(o3_p.stars = p.stars, 
-         o3_slope= slope, 
-         o3_lower = lower,
-         o3_upper = upper)
+         o3_slope= slope.percent, 
+         o3_lower = lower.percent,
+         o3_upper = upper.percent)
 
 
 
@@ -49,11 +49,11 @@ pm2.5_trends = TheilSen(cluster_data,
 
 pm2.5_results = pm2.5_trends$data[[2]] %>% # slope is trend per year, lower and upper are 95% CI of the slope
   drop_na(slope) %>% 
-  select(site, p.stars, slope, lower, upper) %>%
+  select(site, p.stars, slope.percent, lower.percent, upper.percent) %>%
   rename(pm2.5_p.stars = p.stars, 
-         pm2.5_slope= slope, 
-         pm2.5_lower = lower,
-         pm2.5_upper = upper)
+         pm2.5_slope= slope.percent, 
+         pm2.5_lower = lower.percent,
+         pm2.5_upper = upper.percent)
 
 
 trends = nox_results %>%
