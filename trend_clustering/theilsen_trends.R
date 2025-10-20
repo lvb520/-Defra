@@ -13,7 +13,8 @@ cluster_data = sites %>%
 nox_trends = TheilSen(cluster_data,
          pollutant = "nox",
          type = "site",
-         avg.time = "year")
+         avg.time = "year",
+         slope.percent = TRUE)
 
 nox_results = nox_trends$data[[2]] %>% # slope is trend per year, lower and upper are 95% CI of the slope
   drop_na(slope) %>%
@@ -27,7 +28,8 @@ nox_results = nox_trends$data[[2]] %>% # slope is trend per year, lower and uppe
 o3_trends = TheilSen(cluster_data,
                       pollutant = "o3",
                       type = "site",
-                      avg.time = "year")
+                      avg.time = "year",
+                     slope.percent = TRUE)
 
 o3_results = o3_trends$data[[2]] %>% # slope is trend per year, lower and upper are 95% CI of the slope
   drop_na(slope) %>% 
@@ -42,7 +44,8 @@ o3_results = o3_trends$data[[2]] %>% # slope is trend per year, lower and upper 
 pm2.5_trends = TheilSen(cluster_data,
                      pollutant = "pm2.5",
                      type = "site",
-                     avg.time = "year")
+                     avg.time = "year",
+                     slope.percent = TRUE)
 
 pm2.5_results = pm2.5_trends$data[[2]] %>% # slope is trend per year, lower and upper are 95% CI of the slope
   drop_na(slope) %>% 
@@ -59,7 +62,7 @@ trends = nox_results %>%
 
 
 write_csv(trends, 
-          "data/annual_trends.csv")
+          "data/annual_trends_percent.csv")
 
 ################## monthly seasonal
 
