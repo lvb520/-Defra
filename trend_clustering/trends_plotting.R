@@ -5,9 +5,14 @@ library(ggpubr)
 
 meta = importMeta(source = "aurn")
 caz = read_csv("data/clean_air_zomes.csv")
+clusters = read_csv("data/clusters.csv")
 
 trends = read_csv("data/annual_trends.csv") %>%
   left_join(meta)
+
+trends_percent = read_csv("data/annual_trends_percent.csv") %>%
+  left_join(meta)
+
 
 
 CAZ_numbers = c(0, 1, 2, 3, 4)
@@ -19,9 +24,10 @@ caz = caz %>%
   left_join(caz_numeric)
 
 
-trends_with_caz = regex_left_join(trends, caz, 
+trends_with_caz = regex_left_join(trends_percent, caz, 
                                   by = c("site" = "city"),
-                                  ignore_case = TRUE)
+                                  ignore_case = TRUE) %>%
+  left_join(clusters)
 
 trends_long <- trends_with_caz %>%
   pivot_longer(
@@ -39,16 +45,16 @@ trends_with_caz %>%
   geom_pointrange(aes(colour = CAZ_category)) +
   geom_hline(yintercept = 1) +
   coord_flip() +
-  labs(x = "site by latitude") +
+  #labs(x = "site by latitude") +
   theme_minimal()
 
 trends_long %>%
   filter(slope > -20) %>%
-  ggplot(aes(x = reorder(site, CAZ_numbers), y = slope, ymin = lower, ymax = upper)) +
-  geom_pointrange(aes(colour = CAZ_category)) +
+  ggplot(aes(x = reorder(site, cluster_no), y = slope, ymin = lower, ymax = upper)) +
+  geom_pointrange(aes(colour = cluster)) +
   geom_hline(yintercept = 0) +
   coord_flip() +
-  labs(x = "site by CAZ category") +
+  #labs(x = "site by CAZ category") +
   facet_wrap(~pollutant, scales = "free_x") +
   theme_minimal()
 
