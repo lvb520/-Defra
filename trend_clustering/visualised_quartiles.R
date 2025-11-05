@@ -37,6 +37,9 @@ cuts = nox_cut %>%
   left_join(pm2.5_cut) %>%
   drop_na(pm2.5_slope) 
 
+write_csv(cuts, 
+          file = "data/quartile_trends.csv")
+
 totals = cuts %>%
   mutate(nox_slope = as.numeric(nox_slope),
          o3_slope = as.numeric(o3_slope),
